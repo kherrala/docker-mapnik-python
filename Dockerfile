@@ -1,8 +1,8 @@
-FROM debian:stretch
+FROM debian:jessie
 
 MAINTAINER Kyosti Herrala <kyosti.herrala@gmail.com>
 
-ENV MAPNIK_VERSION v3.0.9
+ENV MAPNIK_VERSION v3.0.5
 
 # Essential stuffs
 RUN apt-get update && apt-get install -y \
@@ -18,7 +18,7 @@ RUN apt-get install -y --no-install-recommends \
     libjpeg-dev libtiff-dev libpng12-dev \
     libgdal1-dev libproj-dev libharfbuzz-dev libsqlite3-dev \
     libicu-dev libfreetype6-dev \
-    libcairo2 libcairo2-dev libcairomm-1.0-1v5 libcairomm-1.0-dev \
+    libcairo2 libcairo2-dev libcairomm-1.0-dev \
     ttf-unifont ttf-dejavu ttf-dejavu-core ttf-dejavu-extra \
     python-dev python-gdal python-nose python-cairo python-cairo-dev
 
@@ -29,8 +29,8 @@ RUN curl -s https://mapnik.s3.amazonaws.com/dist/$MAPNIK_VERSION/mapnik-$MAPNIK_
     make && make install JOBS=4 && ldconfig
 
 # Mapnik Python bindings
+RUN apt-get install python-setuptools && touch /usr/local/include/mapnik/warning_ignore.hpp
 RUN cd /tmp/ && curl -sL https://github.com/mapnik/python-mapnik/archive/master.tar.gz | tar xz
-RUN apt-get install python-setuptools
 RUN cd /tmp/python-mapnik-master && PYCAIRO=true python setup.py install
 
 # Cleanup
